@@ -1,56 +1,30 @@
-import { Component, OnInit } from '@angular/core';
-import { NameListService } from '../shared/name-list/name-list.service';
+import { Component } from '@angular/core';
+import { DialogRef, ModalComponent } from 'angular2-modal';
+import { BSModalContext } from 'angular2-modal/plugins/bootstrap';
 
-/**
- * This class represents the lazy loaded HomeComponent.
- */
+export class TestData extends BSModalContext {
+    constructor(public content: any) {
+        super();
+    }
+}
+
 @Component({
-  moduleId: module.id,
-  selector: 'sd-home',
-  templateUrl: 'home.component.html',
-  styleUrls: ['home.component.css'],
+    moduleId: module.id,
+    templateUrl: 'home.component.html'
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements ModalComponent<TestData> {
 
-  newName: string = '';
-  errorMessage: string;
-  names: any[] = [];
+    context;
 
-  /**
-   * Creates an instance of the HomeComponent with the injected
-   * NameListService.
-   *
-   * @param {NameListService} nameListService - The injected NameListService.
-   */
-  constructor(public nameListService: NameListService) {}
+    constructor(public dialog: DialogRef<TestData>) {
+        this.context = dialog.context;
+    }
 
-  /**
-   * Get the names OnInit
-   */
-  ngOnInit() {
-    this.getNames();
-  }
+    beforeDismiss(): boolean {
+        return true;
+    }
 
-  /**
-   * Handle the nameListService observable
-   */
-  getNames() {
-    this.nameListService.get()
-      .subscribe(
-        names => this.names = names,
-        error => this.errorMessage = <any>error
-      );
-  }
-
-  /**
-   * Pushes a new name onto the names array
-   * @return {boolean} false to prevent default form submit behavior to refresh the page.
-   */
-  addName(): boolean {
-    // TODO: implement nameListService.post
-    this.names.push(this.newName);
-    this.newName = '';
-    return false;
-  }
-
+    beforeClose(): boolean {
+        return true;
+    }
 }
